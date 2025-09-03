@@ -1,0 +1,28 @@
+{
+  "name": "aws-flashcard-app",
+  "version": "1.0.0",
+  "description": "A TypeScript flashcard application with Angular frontend and Node.js backend",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "cd backend && npm run dev",
+    "client:dev": "cd frontend && npm start",
+    "build": "npm run server:build && npm run client:build",
+    "server:build": "cd backend && npm run build",
+    "client:build": "cd frontend && npm run build",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "keywords": [
+    "flashcard",
+    "angular",
+    "nodejs",
+    "typescript",
+    "education"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "concurrently": "^8.2.2"
+  }
+}

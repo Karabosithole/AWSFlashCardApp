@@ -1,102 +1,234 @@
-# AWS Flashcard App with AWS Translate
+# AWS Flashcard App
 
-## Overview
-
-This is a simple serverless web application that enables users to create and manage flashcards for learning concepts. Each flashcard is automatically translated into a user-selected language using AWS Translate. The app leverages AWS serverless technologies to provide a scalable, low-maintenance learning tool.
-
----
+A comprehensive TypeScript flashcard application built with Angular frontend and Node.js backend. This app allows users to create, manage, and study flashcards with AI-powered features and learning progress tracking.
 
 ## Features
 
-- Create flashcards with a term and definition in the user’s native language  
-- Automatic translation of flashcards into a chosen target language using AWS Translate  
-- View original and translated flashcards  
-- Basic search/filter by language code  
-- (Optional) Scheduled email reminders to review flashcards via AWS SES  
+- 🔐 **Secure Authentication**: JWT-based login/logout system
+- 📚 **Flashcard Management**: Create, edit, and organize flashcard stacks
+- 🧠 **Smart Study Sessions**: Spaced repetition algorithm for optimal learning
+- 📊 **Progress Tracking**: Detailed statistics and learning analytics
+- 🤖 **AI Integration**: Generate flashcards and improve content with AI
+- 🎨 **Modern UI**: Beautiful Material Design interface
+- 📱 **Responsive Design**: Works on desktop and mobile devices
 
----
+## Tech Stack
 
-## AWS Architecture
+### Backend
+- **Node.js** with Express.js
+- **TypeScript** for type safety
+- **MongoDB** with Mongoose ODM
+- **JWT** for authentication
+- **bcryptjs** for password hashing
+- **Express Validator** for input validation
+- **Helmet** for security headers
+- **Rate Limiting** for API protection
 
-- **Frontend:** Static website hosted on Amazon S3 and delivered via Amazon CloudFront  
-- **API:** RESTful API powered by Amazon API Gateway + AWS Lambda functions  
-- **Database:** DynamoDB to store flashcards and translations  
-- **Translation Service:** AWS Translate for language translation  
-- **Email Service:** Amazon SES for optional review reminder emails  
-- **Event Scheduling:** AWS EventBridge (CloudWatch Events) to trigger scheduled tasks  
-- **CI/CD:** AWS CodePipeline for continuous deployment  
+### Frontend
+- **Angular 18** with standalone components
+- **Angular Material** for UI components
+- **TypeScript** for type safety
+- **RxJS** for reactive programming
+- **SCSS** for styling
 
----
+## Prerequisites
 
-## Getting Started
+Before running this application, make sure you have the following installed:
 
-### Prerequisites
+- **Node.js** (v18 or higher)
+- **npm** (v8 or higher)
+- **MongoDB** (v5 or higher)
+- **Git**
 
-- AWS account with appropriate IAM permissions  
-- AWS CLI installed and configured  
-- Node.js and npm (for frontend and Lambda development)  
-- AWS SAM CLI or Serverless Framework (optional for deployment)  
+## Installation
 
-### Deployment Steps
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd AWSFlashCardApp
+   ```
 
-1. Clone the repository  
-2. Configure AWS CLI with your credentials and default region  
-3. Deploy backend Lambda functions and API Gateway (via SAM or manual setup)  
-4. Create DynamoDB table for flashcards  
-5. Deploy frontend to S3 and configure CloudFront distribution  
-6. (Optional) Configure SES and EventBridge for email reminders  
-7. Use the frontend to create and review flashcards  
+2. **Install dependencies**
+   ```bash
+   npm run install:all
+   ```
 
----
+3. **Set up environment variables**
+   
+   Copy the example environment file:
+   ```bash
+   cp backend/env.example backend/.env
+   ```
+   
+   Edit `backend/.env` with your configuration:
+   ```env
+   # Database
+   MONGODB_URI=mongodb://localhost:27017/flashcard-app
+   
+   # JWT
+   JWT_SECRET=your-super-secret-jwt-key-here
+   JWT_EXPIRE=7d
+   
+   # Server
+   PORT=3000
+   NODE_ENV=development
+   
+   # CORS
+   FRONTEND_URL=http://localhost:4200
+   
+   # AI API (Optional - for AI features)
+   AI_API_KEY=your-ai-api-key-here
+   AI_API_URL=https://api.openai.com/v1
+   ```
 
-## Data Model (DynamoDB)
+4. **Start MongoDB**
+   Make sure MongoDB is running on your system.
 
-| Attribute           | Description                            |
-|---------------------|------------------------------------|
-| FlashcardID (PK)    | Unique identifier for each flashcard |
-| Term                | Original term/text entered by user   |
-| Definition          | Original definition/explanation      |
-| TranslatedTerm      | Translated term text                  |
-| TranslatedDefinition| Translated definition text           |
-| LanguageCode        | Target language code (e.g., "es", "fr") |
-| CreatedAt           | Timestamp of creation                 |
-| UpdatedAt           | Timestamp of last update              |
+## Running the Application
 
----
+### Development Mode
 
-## API Endpoints (Example)
+Start both frontend and backend in development mode:
+```bash
+npm run dev
+```
 
-| Method | Endpoint            | Description                  |
-|--------|---------------------|------------------------------|
-| POST   | /flashcards         | Create a new flashcard        |
-| GET    | /flashcards         | List all flashcards           |
-| GET    | /flashcards/{id}    | Retrieve specific flashcard   |
-| PUT    | /flashcards/{id}    | Update flashcard              |
-| DELETE | /flashcards/{id}    | Delete flashcard              |
+This will start:
+- Backend server on `http://localhost:3000`
+- Frontend development server on `http://localhost:4200`
 
----
+### Individual Services
 
-## Future Enhancements
+**Backend only:**
+```bash
+npm run server:dev
+```
 
-- User authentication and multi-user support via AWS Cognito  
-- Flashcard tagging and categories  
-- Spaced repetition algorithm for optimized review scheduling  
-- Mobile-friendly frontend or Progressive Web App (PWA)  
-- Enhanced analytics and usage reporting  
+**Frontend only:**
+```bash
+npm run client:dev
+```
 
----
+### Production Build
 
-## Security Considerations
+Build both frontend and backend for production:
+```bash
+npm run build
+```
 
-- Use IAM roles with least privilege for Lambda functions  
-- Secure API Gateway with appropriate authorization mechanisms  
-- Store AWS credentials securely and rotate regularly  
-- (If implementing user auth) Use AWS Cognito or other secure identity providers  
+## API Endpoints
 
----
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/logout` - Logout user
+- `GET /api/auth/profile` - Get user profile
+- `PUT /api/auth/profile` - Update user profile
+
+### Flashcard Stacks
+- `GET /api/stacks` - Get user's stacks
+- `POST /api/stacks` - Create new stack
+- `GET /api/stacks/:id` - Get specific stack
+- `PUT /api/stacks/:id` - Update stack
+- `DELETE /api/stacks/:id` - Delete stack
+- `POST /api/stacks/:id/duplicate` - Duplicate stack
+
+### Flashcards
+- `GET /api/cards/stack/:stackId` - Get cards for stack
+- `POST /api/cards` - Create new card
+- `GET /api/cards/:id` - Get specific card
+- `PUT /api/cards/:id` - Update card
+- `DELETE /api/cards/:id` - Delete card
+- `POST /api/cards/:id/study` - Record study session
+
+### AI Features
+- `POST /api/ai/generate-flashcards` - Generate flashcards with AI
+- `POST /api/ai/improve-flashcard/:id` - Improve existing flashcard
+- `POST /api/ai/explain-concept` - Get concept explanation
+- `POST /api/ai/generate-study-plan` - Generate study plan
+
+### User Statistics
+- `GET /api/users/stats` - Get user statistics
+- `GET /api/users/study-history` - Get study history
+
+## Project Structure
+
+```
+AWSFlashCardApp/
+├── backend/                 # Node.js backend
+│   ├── src/
+│   │   ├── controllers/     # Route controllers
+│   │   ├── middleware/      # Custom middleware
+│   │   ├── models/          # Database models
+│   │   ├── routes/          # API routes
+│   │   └── index.ts         # Server entry point
+│   ├── package.json
+│   └── tsconfig.json
+├── frontend/                # Angular frontend
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── components/  # Angular components
+│   │   │   ├── services/    # Angular services
+│   │   │   ├── guards/      # Route guards
+│   │   │   └── interceptors/# HTTP interceptors
+│   │   └── styles.scss      # Global styles
+│   ├── package.json
+│   └── angular.json
+└── package.json             # Root package.json
+```
+
+## Security Features
+
+- **JWT Authentication**: Secure token-based authentication
+- **Password Hashing**: bcryptjs for secure password storage
+- **Input Validation**: Express validator for request validation
+- **Rate Limiting**: Protection against brute force attacks
+- **CORS Configuration**: Controlled cross-origin requests
+- **Security Headers**: Helmet.js for security headers
+- **Environment Variables**: Sensitive data in environment variables
+
+## Learning Features
+
+- **Spaced Repetition**: SuperMemo algorithm for optimal review timing
+- **Progress Tracking**: Detailed statistics on learning progress
+- **Study Streaks**: Gamification with daily study streaks
+- **Difficulty Levels**: Easy, medium, hard card classifications
+- **Study Analytics**: Comprehensive learning analytics
+
+## AI Integration
+
+The app supports AI-powered features when an AI API key is configured:
+
+- **Flashcard Generation**: Create flashcards from topics
+- **Content Improvement**: Enhance existing flashcards
+- **Concept Explanation**: Get detailed explanations
+- **Study Planning**: AI-generated study schedules
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-Specify your license here.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
----
+## Support
+
+If you encounter any issues or have questions, please:
+
+1. Check the existing issues on GitHub
+2. Create a new issue with detailed information
+3. Contact the development team
+
+## Roadmap
+
+- [ ] Mobile app (React Native)
+- [ ] Collaborative study groups
+- [ ] Advanced AI features
+- [ ] Offline support
+- [ ] Export/Import functionality
+- [ ] Advanced analytics dashboard

@@ -1,0 +1,81 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.register-container {
+  @include flex-center;
+  min-height: 100vh;
+  background: $background-accent;
+  padding: $spacing-lg;
+
+  .register-card {
+    @include card-elevated;
+    width: 100%;
+    max-width: 450px;
+
+    .register-form {
+      @include flex-column;
+      gap: $spacing-md;
+
+      .name-fields {
+        display: flex;
+        gap: $spacing-md;
+
+        .half-width {
+          flex: 1;
+        }
+
+        @include mobile {
+          flex-direction: column;
+        }
+      }
+
+      .full-width {
+        width: 100%;
+      }
+
+      .register-button {
+        @include button-primary;
+        height: 48px;
+        font-size: $font-size-md;
+        margin-top: $spacing-sm;
+
+        .button-spinner {
+          margin-right: $spacing-sm;
+        }
+      }
+    }
+
+    .card-actions {
+      @include flex-center;
+      margin-top: $spacing-md;
+
+      .login-link {
+        color: $primary-color;
+        text-decoration: none;
+        font-weight: $font-weight-medium;
+        transition: color $transition-fast;
+
+        &:hover {
+          color: $primary-dark;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    mat-card-header {
+      text-align: center;
+      margin-bottom: $spacing-lg;
+
+      mat-card-title {
+        font-size: $font-size-xxl;
+        font-weight: $font-weight-semibold;
+        color: $text-primary;
+      }
+
+      mat-card-subtitle {
+        color: $text-secondary;
+        margin-top: $spacing-sm;
+      }
+    }
+  }
+}
